@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Videojuego')}"></head>
+<body class="bg-body-tertiary">
+
+<nav th:replace="~{fragments/layout :: navbar('nuevo')}"></nav>
+
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent py-3">
+                    <h1 class="h4 mb-0">
+                        <i class="bi bi-controller text-primary me-2"></i>
+                        <span th:text="${videojuego.id != null} ? 'Editar videojuego' : 'Nuevo videojuego'">Videojuego</span>
+                    </h1>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Un solo formulario sirve para crear y para editar -->
+                    <form th:action="${videojuego.id != null} ? @{/actualizar} : @{/guardar}"
+                          th:object="${videojuego}" method="post" novalidate>
+
+                        <!-- Campo oculto: el UPDATE necesita saber qué id modificar -->
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="row g-3">
+
+                            <div class="col-12">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" id="titulo" class="form-control"
+                                       th:field="*{titulo}"
+                                       th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid'"
+                                       placeholder="Nombre del videojuego">
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('titulo')}"
+                                     th:errors="*{titulo}">Error</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="plataforma" class="form-label">Plataforma</label>
+                                <select id="plataforma" class="form-select"
+                                        th:field="*{plataforma}"
+                                        th:classappend="${#fields.hasErrors('plataforma')} ? 'is-invalid'">
+                                    <option value="">Selecciona...</option>
+                                    <option th:each="p : ${plataformas}"
+                                            th:value="${p}" th:text="${p}">Plataforma</option>
+                                </select>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('plataforma')}"
+                                     th:errors="*{plataforma}">Error</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="genero" class="form-label">Género</label>
+                                <select id="genero" class="form-select"
+                                        th:field="*{genero}"
+                                        th:classappend="${#fields.hasErrors('genero')} ? 'is-invalid'">
+                                    <option value="">Selecciona...</option>
+                                    <option th:each="g : ${generos}"
+                                            th:value="${g}" th:text="${g}">Género</option>
+                                </select>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('genero')}"
+                                     th:errors="*{genero}">Error</div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label for="clasificacion" class="form-label">Clasificación (ESRB)</label>
+                                <select id="clasificacion" class="form-select"
+                                        th:field="*{clasificacion}"
+                                        th:classappend="${#fields.hasErrors('clasificacion')} ? 'is-invalid'">
+                                    <option value="">Selecciona...</option>
+                                    <option th:each="c : ${clasificaciones}"
+                                            th:value="${c}" th:text="${c}">E</option>
+                                </select>
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('clasificacion')}"
+                                     th:errors="*{clasificacion}">Error</div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label for="anioLanzamiento" class="form-label">Año de lanzamiento</label>
+                                <input type="number" id="anioLanzamiento" class="form-control"
+                                       th:field="*{anioLanzamiento}"
+                                       th:classappend="${#fields.hasErrors('anioLanzamiento')} ? 'is-invalid'"
+                                       placeholder="2024">
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('anioLanzamiento')}"
+                                     th:errors="*{anioLanzamiento}">Error</div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <label for="stock" class="form-label">Stock (unidades)</label>
+                                <input type="number" id="stock" class="form-control"
+                                       th:field="*{stock}"
+                                       th:classappend="${#fields.hasErrors('stock')} ? 'is-invalid'"
+                                       placeholder="0">
+                                <div class="invalid-feedback"
+                                     th:if="${#fields.hasErrors('stock')}"
+                                     th:errors="*{stock}">Error</div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label for="precio" class="form-label">Precio</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" id="precio"
+                                           class="form-control"
+                                           th:field="*{precio}"
+                                           th:classappend="${#fields.hasErrors('precio')} ? 'is-invalid'"
+                                           placeholder="0.00">
+                                    <div class="invalid-feedback"
+                                         th:if="${#fields.hasErrors('precio')}"
+                                         th:errors="*{precio}">Error</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a class="btn btn-outline-secondary" th:href="@{/videojuegos}">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i>Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+</html>
